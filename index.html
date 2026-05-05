@@ -253,26 +253,20 @@
 <input type="file" id="file-input" accept="image/png,image/jpeg,image/jpg" />
 
 <script>
-(function() {
-    var IS_DEBUG_MODE = location.search.indexOf('debug') !== -1;
-    if (!IS_DEBUG_MODE) {
-        var noop = function() {};
-        console.log   = noop;
-        console.info  = noop;
-        console.warn  = noop;
-        console.debug = noop;
-        console.error = noop;
-    }
-})();
-
 var AVATAR_COUNT   = 3;
 var AVATAR_PATH    = 'TemplateData/avatars/';
 var CHECK_AUTH_URL = 'https://projects-admin.vr360.com.vn/api/phongtranh/check-auth';
 
 var IS_DEBUG = location.search.indexOf('debug') !== -1;
 if (IS_DEBUG) document.getElementById('debug-panel').style.display = 'block';
+
+// Suppress all console output unless debug mode
+if (!IS_DEBUG) {
+    var _noop = function() {};
+    console.log = _noop; console.info = _noop; console.warn = _noop; console.error = _noop; console.debug = _noop;
+}
+
 function dbg(msg) {
-    console.log('[AVT] ' + msg);
     if (!IS_DEBUG) return;
     var p = document.getElementById('debug-panel');
     p.textContent += msg + '\n';
@@ -689,17 +683,17 @@ window.OpenFilePicker = function() { var fi=document.getElementById('file-input'
 
 var buildUrl = "Build";
 var config = {
-    dataUrl:buildUrl+"/ArtGalleryBuild.data.unityweb", frameworkUrl:buildUrl+"/ArtGalleryBuild.framework.js.unityweb",
-    codeUrl:buildUrl+"/ArtGalleryBuild.wasm.unityweb", streamingAssetsUrl:"StreamingAssets",
+    dataUrl:buildUrl+"/ArtGalleryBuildMobile.data.unityweb", frameworkUrl:buildUrl+"/ArtGalleryBuildMobile.framework.js.unityweb",
+    codeUrl:buildUrl+"/ArtGalleryBuildMobile.wasm.unityweb", streamingAssetsUrl:"StreamingAssets",
     companyName:"DefaultCompany", productName:"ArtGallery3D", productVersion:"0.1",
 };
 var uScript = document.createElement('script');
-uScript.src = buildUrl + "/ArtGalleryBuild.loader.js";
+uScript.src = buildUrl + "/ArtGalleryBuildMobile.loader.js";
 uScript.onload = function() {
     createUnityInstance(document.querySelector('#unity-canvas'), config, function(p) {
         bottomFill.style.width = Math.round(p*100)+'%';
     }).then(function(inst) {
-        unityInstance=inst; unityReady=true; dbg('[WebGL] Unity loaded ✓');
+        unityInstance=inst; unityReady=true; console.log('[WebGL] Unity loaded ✓');
         unityInstance.SendMessage('MenuController','ShowAvatarFromWeb',String(avatarIndex));
         checkReady(); resizeThree();
         // Nếu đã check auth từ đầu và là admin thì xử lý ngay
