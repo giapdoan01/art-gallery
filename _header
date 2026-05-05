@@ -1,0 +1,17 @@
+/Build/*
+  Content-Type: application/octet-stream
+
+/*.wasm.unityweb
+  Content-Type: application/wasm
+  Content-Encoding: br
+
+/*.js.unityweb
+  Content-Type: application/javascript
+  Content-Encoding: br
+
+/*.data.unityweb
+  Content-Type: application/octet-stream
+  Content-Encoding: br
+
+/*.unityweb
+  Content-Encoding: br
